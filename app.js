@@ -1,6 +1,11 @@
 const daftarEl = document.getElementById("daftar");
 const kosongEl = document.getElementById("kosong");
 const counterEl = document.getElementById("counter");
+const formEl = document.getElementById("form-tugas");
+const judulEl = document.getElementById("judul");
+const matkulEl = document.getElementById("matkul");
+const deadlineEl = document.getElementById("deadline");
+const errorEl = document.getElementById("error");
 
 let tugas = [
   { id: 1, judul: "Lab 10 event delegation", matkul: "Pemrograman Web", deadline: "2026-10-08", selesai: false },
@@ -44,5 +49,41 @@ function render() {
   counterEl.textContent = `${jumlahAktif} tugas aktif`;
   kosongEl.hidden = tugas.length > 0;
 }
+
+function tampilError(pesan) {
+  errorEl.textContent = pesan;
+  errorEl.hidden = false;
+}
+
+formEl.addEventListener("submit", (event) => {
+  event.preventDefault();
+
+  const judul = judulEl.value.trim();
+  const deadline = deadlineEl.value;
+
+  if (judul.length < 3) {
+    tampilError("Judul tugas minimal 3 karakter.");
+    return;
+  }
+
+  if (!deadline) {
+    tampilError("Deadline wajib diisi.");
+    return;
+  }
+
+  errorEl.hidden = true;
+
+  tugas.push({
+    id: Date.now(),
+    judul: judul,
+    matkul: matkulEl.value,
+    deadline: deadline,
+    selesai: false,
+  });
+
+  formEl.reset();
+  judulEl.focus();
+  render();
+});
 
 render();
