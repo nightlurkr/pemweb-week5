@@ -6,16 +6,27 @@ const judulEl = document.getElementById("judul");
 const matkulEl = document.getElementById("matkul");
 const deadlineEl = document.getElementById("deadline");
 const errorEl = document.getElementById("error");
+const filterEl = document.getElementById("filter");
+
+let filterAktif = "semua";
 
 let tugas = [
   { id: 1, judul: "Lab 10 event delegation", matkul: "Pemrograman Web", deadline: "2026-10-08", selesai: false },
   { id: 2, judul: "ERD sistem perpustakaan", matkul: "Basis Data", deadline: "2026-10-12", selesai: true },
 ];
 
+function tampil(t) {
+  if (filterAktif === "aktif") return !t.selesai;
+  if (filterAktif === "selesai") return t.selesai;
+  return true;
+}
+
 function render() {
   daftarEl.textContent = "";
 
-  for (const t of tugas) {
+  const terlihat = tugas.filter(tampil);
+
+  for (const t of terlihat) {
     const li = document.createElement("li");
     li.dataset.id = t.id;
     if (t.selesai) li.classList.add("selesai");
@@ -47,7 +58,7 @@ function render() {
 
   const jumlahAktif = tugas.filter((t) => !t.selesai).length;
   counterEl.textContent = `${jumlahAktif} tugas aktif`;
-  kosongEl.hidden = tugas.length > 0;
+  kosongEl.hidden = terlihat.length > 0;
 }
 
 function tampilError(pesan) {
@@ -100,6 +111,18 @@ daftarEl.addEventListener("click", (event) => {
     item.selesai = event.target.checked;
     render();
   }
+});
+
+filterEl.addEventListener("click", (event) => {
+  if (!event.target.matches("button")) return;
+
+  filterAktif = event.target.dataset.filter;
+
+  for (const tombol of filterEl.children) {
+    tombol.classList.toggle("on", tombol === event.target);
+  }
+
+  render();
 });
 
 render();
