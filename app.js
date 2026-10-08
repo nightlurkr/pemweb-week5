@@ -86,4 +86,20 @@ formEl.addEventListener("submit", (event) => {
   render();
 });
 
+daftarEl.addEventListener("click", (event) => {
+  const li = event.target.closest("li");
+  if (!li) return;
+
+  const id = Number(li.dataset.id);
+
+  if (event.target.matches(".btn-hapus")) {
+    tugas = tugas.filter((t) => t.id !== id);
+    render();
+  } else if (event.target.matches("input[type='checkbox']")) {
+    const item = tugas.find((t) => t.id === id);
+    item.selesai = event.target.checked;
+    render();
+  }
+});
+
 render();
